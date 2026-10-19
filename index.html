@@ -1,0 +1,292 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#123e35"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="screen-orientation" content="portrait"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>八牌 - HACHIHAI</title><style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:system-ui,'Yu Gothic',sans-serif;background:#091d1a;color:#f8f4df}body{display:flex;justify-content:center}button{font:inherit;cursor:pointer}#app{width:min(100%,530px);min-height:100dvh;background:radial-gradient(ellipse at 50% 40%,#246354,#103b32 70%);display:flex;flex-direction:column;padding:12px 12px calc(12px + env(safe-area-inset-bottom));box-shadow:0 0 50px #0008}.top{display:flex;justify-content:space-between;align-items:center;gap:5px}.logo{font-size:22px;letter-spacing:.16em;font-weight:950;color:#f7dc91}.sub{font-size:10px;color:#c1d6c6;letter-spacing:.19em}.btn{border:1px solid #c6ad72;background:#194c40;color:#f9e8be;padding:9px 12px;border-radius:9px;font-weight:700}.btn:disabled{opacity:.4;cursor:default}.points{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.score{background:#ffffff14;border:1px solid #ffffff22;border-radius:12px;text-align:center;padding:7px}.score b{font-size:27px;color:#ffe5a0}.score span{display:block;font-size:11px;color:#d4e8da}.score.current{outline:1px solid #eacf83}.info{text-align:center;font-size:13px;color:#e9e6c9;margin:9px 0}.backs{display:flex;justify-content:center;gap:2px;min-height:58px}.backtile{width:35px;height:53px;border:2px solid #e2e7d6;border-bottom:5px solid #dadfca;border-radius:4px;background:repeating-linear-gradient(45deg,#236c70 0px,#236c70 4px,#1d525a 4px,#1d525a 8px);box-shadow:1px 2px 2px #0008;position:relative}.backtile:after{content:'◆';position:absolute;inset:0;display:grid;place-items:center;color:#b5d5cc;font-size:19px}.board{flex:1;min-height:205px;display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:5px;padding:7px 0}.river-label{font-size:11px;color:#b9d3c3;margin-bottom:5px}.river{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;max-width:380px;min-height:44px}.middle{display:flex;align-items:center;gap:12px;padding:12px 20px;background:#0a2c2666;border-radius:18px;border:1px solid #ffffff18;text-align:center}.middle strong{font-size:18px;color:#f4d98d}.middle small{display:block;font-size:10px;color:#b7d8c7}.tile{position:relative;width:clamp(31px,10vw,49px);height:clamp(45px,14.3vw,66px);padding:3px;border-radius:5px;background:linear-gradient(100deg,#d7d1bd,#fffef3 25%,#fffbee 80%,#cecab5);border:1px solid #b4b5a6;border-bottom:5px solid #b6c0a5;box-shadow:1px 3px 2px #0006;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#20352c}.tile img{width:100%;height:100%;object-fit:contain;display:block}.tile .glyph{font-size:clamp(25px,7.6vw,39px);line-height:1;white-space:nowrap}.tile.mini{width:32px;height:43px;border-bottom-width:3px;padding:2px}.tile.mini .glyph{font-size:27px}.tile.selected{transform:translateY(-13px);outline:3px solid #fbd76c;z-index:1}.tile.latest{margin-left:8px;border-color:#d6ad45}.tile:disabled{cursor:default}.tile .tag{position:absolute;bottom:0;right:1px;font-size:8px;background:#f7df85;color:#46360d;border-radius:2px}.playerarea{background:#082c2690;padding:13px 7px 10px;border:1px solid #ffffff28;border-radius:17px}.hand{display:flex;justify-content:center;gap:2px;margin-top:11px;min-height:71px}.hand .tile{flex:0 1 49px;min-width:0}.hand .tile img{max-width:100%}.hint{font-size:12px;color:#d1e1d6;text-align:center;min-height:22px}.controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0 4px}.controls .btn{flex:1 1 28%;min-width:90px;max-width:190px;font-size:12px;padding:9px 5px}.action{background:#e9c873;color:#17372e;border-color:#ffedb0}.action:disabled{background:#645e4b;color:#ccc}.modal{position:fixed;inset:0;background:#07130ed9;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}.panel{background:linear-gradient(155deg,#1e5444,#0d302b);width:min(100%,425px);border:1px solid #c6a665;padding:24px;border-radius:22px;text-align:center;box-shadow:0 25px 75px #000b}.panel h1{font-size:27px;color:#f5d889}.panel p{line-height:1.8;font-size:14px}.panel .btn{margin-top:7px}.hidden{display:none!important}.small{font-size:11px;color:#b9cfbe}.setting{display:flex;justify-content:center;gap:8px;margin:10px 0}.setting .btn{padding:8px;font-size:12px}.setting .active{background:#e7c476;color:#0e3328}.status{font-weight:bold;color:#ffe8ae}.msg{font-size:13px;line-height:1.5;min-height:36px;text-align:center;color:#ffe6a7}.score.riichi-active{box-shadow:inset 0 0 0 2px #e3b857}.score.riichi-active span:after{content:' 立直';color:#ffce75;font-weight:bold}.footer{text-align:center;font-size:10px;color:#acc8b7;margin-top:6px}@media(max-height:730px){.board{min-height:155px}.score b{font-size:22px}.tile{height:clamp(42px,12vw,59px)}.hand{min-height:62px}.backtile{height:43px;width:29px}.backs{min-height:46px}.middle{padding:7px 14px}}
+
+/* v0.2: discard spotlight and open winning hands */
+.tile.danger-flash{outline:4px solid #ff4949;outline-offset:2px;z-index:4;animation:dangerPulse .55s ease-in-out infinite alternate;box-shadow:0 0 16px #ff3636!important}
+@keyframes dangerPulse{from{outline-color:#ff3c3c;box-shadow:0 0 4px #f33;transform:scale(1)}to{outline-color:#fffa9b;box-shadow:0 0 22px #f33;transform:scale(1.1)}}
+.tile.win-last{outline:3px solid #ff5656;outline-offset:2px}
+#cpuHand.revealed{min-height:70px;gap:2px;flex-wrap:wrap}
+#cpuHand.revealed .tile{width:clamp(31px,9vw,47px);height:clamp(46px,13vw,66px)}
+.win-set{display:flex;align-items:center;justify-content:center;gap:3px;flex-wrap:nowrap}
+.win-sets{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:12px 0}
+.win-set .tile{width:clamp(32px,9.3vw,45px);height:clamp(46px,13vw,63px)}
+.win-caption{font-size:11px;color:#e6d6a0;margin-top:4px}
+.panel{max-height:92dvh;overflow:auto}.panel h1{margin:0 0 8px}
+#winningBanner{margin:5px auto 0;padding:8px 12px;border:1px solid #d9bd78;background:#0c3229;border-radius:10px;text-align:center;color:#ffdda3;font-weight:800}
+
+/* v0.3: CPU hand falls face-up and groups itself */
+#cpuHand.showdown{perspective:650px;min-height:84px;align-items:center;gap:5px;flex-wrap:nowrap}
+#cpuHand.showdown .backtile{animation:backFall .52s ease-in forwards;animation-delay:var(--delay)}
+@keyframes backFall{0%{transform:rotateX(0);opacity:1}72%{transform:rotateX(76deg) translateY(9px);opacity:1}100%{transform:rotateX(90deg) translateY(12px);opacity:0}}
+#cpuHand.grouped{display:flex;justify-content:center;gap:8px;min-height:90px;align-items:center;flex-wrap:nowrap}
+#cpuHand.grouped .showdown-group{display:flex;gap:2px;position:relative;min-width:0;align-items:center;padding-bottom:19px}
+#cpuHand.grouped .showdown-group:after{content:attr(data-name);position:absolute;bottom:0;left:0;right:0;text-align:center;color:#efde9d;font-size:11px;font-weight:700}
+#cpuHand.grouped .tile{width:clamp(28px,8.5vw,43px);height:clamp(43px,12vw,61px);flex-shrink:1;min-width:0;transform-origin:bottom center;animation:faceFall .62s cubic-bezier(.2,.72,.2,1.13) both;animation-delay:var(--delay)}
+@keyframes faceFall{0%{opacity:0;transform:perspective(420px) rotateX(-83deg) translateY(-9px) scale(.85)}65%{opacity:1;transform:perspective(420px) rotateX(12deg) translateY(2px)}100%{opacity:1;transform:perspective(420px) rotateX(0) translateY(0)}}
+#cpuHand.grouped .tile.win-last{box-shadow:0 0 14px #ff6868}
+#winningBanner.announce{animation:bannerAppear .4s ease-out both}
+@keyframes bannerAppear{from{opacity:0;transform:translateY(-8px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:360px){#cpuHand.grouped{gap:4px}#cpuHand.grouped .showdown-group{gap:1px}}
+@media(prefers-reduced-motion:reduce){#cpuHand.showdown .backtile,#cpuHand.grouped .tile,#winningBanner.announce{animation-duration:.01ms!important;animation-delay:0ms!important}}
+
+/* v0.5: compact stable discard areas and touch-first hand */
+.river{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));align-content:start;justify-items:center;gap:2px;width:min(100%,346px);height:91px;min-height:91px;max-width:346px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;overscroll-behavior:contain}
+.river .tile.mini{width:clamp(22px,6.2vw,29px);height:29px;min-width:0;border-bottom-width:2px;padding:1px}.river .tile.mini .glyph{font-size:23px}
+.board{min-height:240px;gap:4px;padding:4px 0;justify-content:space-between}.board>div:first-child,.board>div:last-child{width:100%;display:flex;align-items:center;flex-direction:column}.river-label{margin-bottom:3px}.middle{padding:7px 14px}.playerarea{padding:9px 7px 7px}.hand{margin-top:8px;gap:2px;align-items:flex-end;min-height:76px}.hand .tile{touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}.hand .tile.latest{margin-left:0}.hand .tile{width:clamp(29px,10.2vw,49px);flex:1 1 0;max-width:49px}.hand .draw-slot{background:transparent;border:2px solid #f6f9fb;border-radius:5px;box-shadow:0 0 8px #fff8;animation:drawSlotBlink .8s ease-in-out infinite alternate;min-width:0;min-height:60px;color:#fff;cursor:pointer;touch-action:manipulation}.hand .draw-slot:after{content:'＋';font-size:24px;color:#fff8}@keyframes drawSlotBlink{from{border-color:#fff;box-shadow:0 0 12px #fff9}to{border-color:#ffffff38;box-shadow:0 0 2px #fff2}}
+.controls{display:grid;grid-template-columns:1fr 1.4fr;gap:7px}.controls .btn{min-width:0;max-width:none;width:100%;font-size:13px;min-height:42px;padding:8px 5px}.hand .tile.selected{transform:translateY(-9px)}
+@media(max-width:390px){#app{padding:8px 8px calc(8px + env(safe-area-inset-bottom))}.hand .tile{padding:1px;min-width:0}.hand .tile .glyph{font-size:clamp(20px,7vw,29px)}.river{width:min(100%,310px)}}
+@media(max-height:720px){.board{min-height:208px}.river{height:69px;min-height:69px}.backtile{height:43px}.hand{min-height:64px}.hand .draw-slot{min-height:51px}.msg{min-height:27px}}
+@media(prefers-reduced-motion:reduce){.hand .draw-slot{animation:none}}
+/* v0.5.4: show winning draw in the rightmost slot before announcing */
+.hand .tile.tsumo-flash{position:relative;z-index:5;outline:4px solid #ff4545;outline-offset:2px;animation:tsumoPulse .48s ease-in-out infinite alternate;box-shadow:0 0 14px #ff4545;pointer-events:none}
+@keyframes tsumoPulse{from{outline-color:#ff4545;box-shadow:0 0 5px #f44;transform:translateY(0)}to{outline-color:#fff0b7;box-shadow:0 0 23px #f44;transform:translateY(-5px)}}
+@media(prefers-reduced-motion:reduce){.hand .tile.tsumo-flash{animation:none;outline-color:#ff4545;box-shadow:0 0 16px #ff4545}}
+
+/* v0.5.4: 1000-point riichi sticks at the right of both discard rows */
+.river-line{width:100%;display:flex;align-items:flex-start;justify-content:center;gap:6px;min-width:0}
+.river-line .river{flex:0 1 346px;min-width:0;width:calc(100% - 62px)}
+.riichi-stick-slot{flex:0 0 50px;width:50px;height:91px;display:flex;align-items:center;justify-content:center}
+.riichi-stick{position:relative;display:block;width:47px;height:15px;border-radius:7px;background:linear-gradient(180deg,#fff9e6,#e7ddc2);border:1px solid #a9986e;box-shadow:1px 2px 4px #0007, inset 0 1px 1px #fff9;animation:stickAppear .3s ease-out both}
+.riichi-stick:before{content:'';position:absolute;left:50%;top:50%;width:8px;height:8px;transform:translate(-50%,-50%);background:#c92f35;border-radius:50%;box-shadow:0 0 0 1px #aa3333}
+
+@keyframes stickAppear{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:390px){.river-line{gap:3px}.riichi-stick-slot{flex-basis:43px;width:43px}.riichi-stick{width:42px}.river-line .river{width:calc(100% - 46px)}}
+@media(max-height:720px){.riichi-stick-slot{height:69px}}
+@media(prefers-reduced-motion:reduce){.riichi-stick{animation:none}}
+/* v0.5.5: slimmer discard tiles; hand tiles and riichi sticks unchanged */
+.river{grid-template-columns:repeat(11,minmax(0,1fr));width:min(100%,292px);max-width:292px;column-gap:1px;row-gap:2px}
+.river .tile.mini{width:clamp(19px,5.8vw,25px);height:29px;padding:1px;border-radius:3px}
+.river .tile.mini .glyph{font-size:clamp(17px,5vw,21px)}
+.river-line .river{flex:0 1 292px;width:min(calc(100% - 62px),292px)}
+@media(max-width:390px){.river-line .river{width:min(calc(100% - 46px),292px)}}
+/* v0.5.6: keep ron/win confirmation entirely within the viewport */
+html,body{max-width:100%;overflow-x:hidden}
+body.modal-open{position:fixed;inset:0;width:100%;height:100dvh;overflow:hidden;overscroll-behavior:none}
+.modal{height:100dvh;max-height:100dvh;min-height:0;overflow:hidden;padding:clamp(8px,2.5dvh,20px);overscroll-behavior:contain}
+.modal .panel{display:flex;flex-direction:column;min-height:0;max-height:100%;overflow:hidden;padding:clamp(13px,2.3dvh,24px)}
+.modal .panel h1{flex:none;margin:0 0 7px}
+#modalText{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;flex:0 1 auto}
+.modal .setting,.modal .panel>.btn{flex:none}
+@media(max-height:680px){.modal .panel h1{font-size:23px}.modal .panel p{line-height:1.45;margin:7px 0}.modal .win-sets{margin:7px 0;gap:4px}.modal .win-set .tile{height:clamp(37px,10vh,52px);width:clamp(26px,7vw,39px)}}
+
+/* v0.6.0: result tiles keep real mahjong-tile proportions on narrow screens.
+   Do not let nested flex items stretch or compress tiles independently. */
+.modal .win-sets{display:flex;flex-wrap:nowrap;align-items:flex-start;justify-content:center;gap:clamp(3px,1.2vw,9px);max-width:100%;min-width:0}
+.modal .win-sets>div{display:flex;flex-direction:column;align-items:center;min-width:0;flex:0 1 auto}
+.modal .win-set{display:flex;flex-wrap:nowrap;align-items:flex-start;justify-content:center;gap:2px;min-width:0}
+.modal .win-set .tile{
+  box-sizing:border-box;display:flex;flex:none;min-width:0;max-width:none;
+  width:clamp(23px,7.1vw,39px);height:auto;aspect-ratio:49 / 66;
+  padding:1px;border-bottom-width:3px;align-self:flex-start;
+}
+.modal .win-set .tile img{display:block;width:100%;height:100%;min-height:0;min-width:0;object-fit:contain}
+.modal .win-caption{font-size:10px;white-space:nowrap}
+@media(max-width:360px){.modal .panel{padding:12px}.modal .win-sets{gap:4px}.modal .win-set{gap:1px}}
+/* v0.6.0 mobile standalone + browser fullscreen controls */
+html{height:100%;overscroll-behavior:none}body{min-height:100dvh;overscroll-behavior:none}#app{min-height:100dvh}
+.top-actions{display:flex;gap:5px;align-items:center}.top-actions .btn{white-space:nowrap}
+#fullscreenBtn{display:none}@media(max-width:680px) and (pointer:coarse){#fullscreenBtn{display:inline-block}.top-actions .btn{font-size:11px;padding:8px 6px}.logo{font-size:20px}}
+@media(display-mode:fullscreen),(display-mode:standalone){#fullscreenBtn{display:none!important}}
+@media(orientation:landscape) and (max-height:520px) and (pointer:coarse){#app{min-height:100dvh}}
+/* v0.6.1: turn the declaration tile itself sideways instead of using a colored outline.
+   Keep it inside its grid cell, including narrow phone displays. */
+.river .tile.riichi-discard{transform:rotate(-90deg) scale(.85);transform-origin:center center;z-index:1}
+/* Winning-discard flash must remain visible even for a sideways tile. */
+.river .tile.riichi-discard.danger-flash{outline:3px solid #ff4242;outline-offset:1px;animation:riichiRonFlash .48s ease-in-out infinite alternate}
+@keyframes riichiRonFlash{from{outline-color:#ff4242;box-shadow:0 0 5px #ff4242}to{outline-color:#fff0b7;box-shadow:0 0 14px #ff4242}}
+@media(prefers-reduced-motion:reduce){.river .tile.riichi-discard.danger-flash{animation:none}}
+.mode-choice.not-landing .mode-heading,.mode-choice.not-landing .mode-online{display:none}.mode-choice{display:grid;gap:10px;margin:16px 0 8px}.mode-heading{text-align:center;color:#ffe5a0;font-weight:800;font-size:17px}.mode-choice .mode-start,.mode-choice .mode-online{width:100%;min-height:58px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:12px;font-size:17px;font-weight:800;text-decoration:none}.mode-choice .mode-online{background:#245b50;border:2px solid #9bdece;color:#fff5d4;flex-direction:column;gap:3px}.mode-online small{font-size:11px;color:#d3ecdf}.mode-choice .mode-start{background:#e8c877;color:#26352b;border:2px solid #f8dfa0}.mode-choice .mode-start:hover,.mode-choice .mode-online:hover{filter:brightness(1.1)}
+</style><style>#modal:has(.mode-choice.not-landing) #introSoundSlot{display:none}</style></head><body><main id="app"><div class="top"><div><div class="logo">八牌 <span style="font-size:12px">HACHIHAI</span></div><div class="sub">8 TILES • 2 PLAYERS • 20 POINTS • v0.8.7</div></div><div class="top-actions"><button class="btn" id="fullscreenBtn" type="button" title="全画面表示">⛶ 全画面</button><a class="btn" href="./multiplayer.html" style="text-decoration:none">2人対戦</a><button class="btn" id="menuBtn">ルール・設定</button></div></div><div class="points"><div class="score" id="cpuScore"><span>CPU</span><b id="cpuPts">0</b> <small>点</small></div><div class="score" id="userScore"><span>YOU</span><b id="userPts">0</b> <small>点</small></div></div><div class="info" id="roundName">第1局</div><div class="backs" id="cpuHand"></div><div id="winningBanner" class="hidden"></div><div class="board"><div><div class="river-label">CPUの捨て牌</div><div class="river-line"><div class="river" id="cpuRiver"></div><div class="riichi-stick-slot" id="cpuStick" aria-label="CPUのリーチ表示"></div></div></div><div class="middle"><div><strong id="deckCount">58</strong><small>山の残り</small></div><div><strong id="centerState">対局準備中</strong><small id="turnSub">八牌・頭脳戦</small></div></div><div><div class="river-label">あなたの捨て牌</div><div class="river-line"><div class="river" id="userRiver"></div><div class="riichi-stick-slot" id="userStick" aria-label="あなたのリーチ表示"></div></div></div></div><div class="msg" id="message">スタートで対局開始</div><div class="playerarea"><div class="hint" id="handHint">あなたの手牌</div><div class="hand" id="userHand"></div><div class="controls"><button class="btn" id="riichiBtn">リーチ −1点</button><button class="btn action" id="drawBtn">1枚引く</button></div></div><div class="footer">牌の絵柄：FluffyStuff / riichi-mahjong-tiles (Public Domain)</div></main>
+<div class="modal" id="modal"><div class="panel"><h1 id="modalTitle">八牌 - HACHIHAI</h1><div id="modalText"><p>2種類の数字牌を使った、1対1の読み合い麻雀。</p><p><b>1枚引いて1枚捨てる。</b><br>「3枚組＋3枚組＋同じ2枚」が揃えばアガリ！</p><p>連続する3枚は同じ種類で。<br>同じ数字3枚もセットになります。</p><p>ツモは<b>2点</b>、ロンは<b>3点</b>。役のボーナスも加算。リーチは宣言時−1点、成功すると＋2点。一発とダブルリーチは各＋1点（宣言後はツモ切り）。先に<b>20点</b>で勝利。</p><p class="small">同じ牌は各4枚。相手の捨て牌から残りと危険度を読みましょう。自分が捨てた牌が待ち牌に含まれる場合はロン不可です。</p></div><div id="introSoundSlot"></div><div class="setting"><button class="btn active" id="normal">CPU 標準</button><button class="btn" id="hard">CPU 強い</button></div><div id="modeChoice" class="mode-choice"><div class="mode-heading">対戦モードを選択</div><button class="btn action mode-start" id="modalPrimary" type="button">🤖 CPU対戦をスタート</button><a class="btn mode-online" href="./multiplayer.html">🌐 2人でオンライン対戦<small>同じWi-Fi・離れた友達とも対戦可能</small></a></div><button class="btn hidden" id="modalSecondary">ロンを見送る</button></div></div>
+
+<script>
+/* 八牌効果音：ユーザー操作後に再生。オンラインでは状態更新から鳴動を判断 */
+(function(){
+ const cues={draw:'01_draw_soft.wav',slide:'02_draw_slide.wav',discard:'03_discard_clack.wav',heavy:'04_discard_heavy.wav',riichi:'05_riichi.wav',ron:'06_ron.wav',tsumo:'07_tsumo_win.wav',result:'08_result.wav',loss:'09_loss.wav'};
+ const audio={};let enabled=true,vol=.65;
+ for(const [name,file] of Object.entries(cues)){
+   const sound=new Audio('./sounds/'+file);sound.preload='auto';audio[name]=sound;
+ }
+ window.HachiSound={
+   play(name){if(!enabled||!audio[name])return;try{const a=audio[name].cloneNode();a.volume=vol;a.play().catch(()=>{});}catch(_){}},
+   setEnabled(v){enabled=!!v;localStorage.setItem('hachihai-sound-on',enabled?'1':'0');},
+   setVolume(v){vol=Math.max(0,Math.min(1,Number(v)/100));localStorage.setItem('hachihai-sound-vol',String(Math.round(vol*100)));},
+   get enabled(){return enabled},get volume(){return Math.round(vol*100)}
+ };
+ enabled=localStorage.getItem('hachihai-sound-on')!=='0';const saved=localStorage.getItem('hachihai-sound-vol');if(saved!==null)vol=Math.max(0,Math.min(1,Number(saved)/100));
+ window.mountHachiSound=function(target){
+  if(!target)return;
+  target.innerHTML='<div class="sound-settings"><button id="soundToggle" type="button">♪ 音 ON</button><label for="soundVolume">音量 <span id="soundPercent"></span></label><input id="soundVolume" type="range" min="0" max="100" step="5" aria-label="効果音の音量"></div>';
+  const b=target.querySelector('#soundToggle'),v=target.querySelector('#soundVolume'),pct=target.querySelector('#soundPercent');
+  v.value=window.HachiSound.volume;
+  function refresh(){b.textContent=window.HachiSound.enabled?'♪ 音 ON':'♪ 音 OFF';pct.textContent=v.value+'%';}
+  b.addEventListener('click',()=>{window.HachiSound.setEnabled(!window.HachiSound.enabled);refresh();if(window.HachiSound.enabled)window.HachiSound.play('draw');});
+  v.addEventListener('input',()=>{window.HachiSound.setVolume(v.value);refresh();});refresh();
+ };
+ const css=document.createElement('style');css.textContent='.sound-settings{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:12px 0;padding:12px;border:1px solid #b99f69;border-radius:12px;background:#092c25;color:#ffecbe}.sound-settings button{background:#22594c;color:#ffe5aa;border:1px solid #b99f69;border-radius:8px;padding:8px 10px;font-weight:bold}.sound-settings label{font-size:13px;white-space:nowrap}.sound-settings input{width:min(100%,175px);accent-color:#e4c275;touch-action:pan-x}';document.head.append(css);
+
+})();
+</script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+// Tiles: p1..p9 (筒子), m1..m9 (萬子); 4 copies each.
+const SUITS=['p','m'];const ALL=SUITS.flatMap(s=>Array.from({length:9},(_,i)=>s+(i+1)));
+const NAMES={p:'筒',m:'萬'};
+const GLYPHS={p:['🀙','🀚','🀛','🀜','🀝','🀞','🀟','🀠','🀡'],m:['🀇','🀈','🀉','🀊','🀋','🀌','🀍','🀎','🀏']};
+const IMGROOT='https://raw.githubusercontent.com/FluffyStuff/riichi-mahjong-tiles/master/Export/Regular/';
+const asset=t=>IMGROOT+(t[0]==='p'?'Pin':'Man')+t.slice(1)+'.png';
+const seqs=[];for(const s of SUITS){for(let n=1;n<=9;n++)seqs.push([s+n,s+n,s+n]);for(let n=1;n<=7;n++)seqs.push([s+n,s+(n+1),s+(n+2)]);}
+const complete=[];for(const a of seqs)for(const b of seqs)for(const pair of ALL){let arr=[...a,...b,pair,pair], count={};for(const t of arr)count[t]=(count[t]||0)+1;if(Object.values(count).every(v=>v<=4))complete.push(count);}
+// Winning shapes are precalculated once. Do not search thousands of shapes every tap.
+const winKeys=new Set(complete.map(w=>ALL.map(t=>w[t]||0).join('')));
+function isWin(h){if(h.length!==8)return false;if(fourPairs(h))return true;const c=count(h);return winKeys.has(ALL.map(t=>c[t]||0).join(''));}
+function fourPairs(h){const c=count(h);return h.length===8&&Object.keys(c).length===4&&Object.values(c).every(v=>v===2);}
+function count(arr){const c={};for(const t of arr)c[t]=(c[t]||0)+1;return c;}
+function sortHand(h){h.sort((a,b)=>ALL.indexOf(a)-ALL.indexOf(b));}
+// Fast candidate score: count how many held tiles fit into any complete eight-tile hand.
+function potential(h){const c=count(h);let best=-99;for(const w of complete){let matched=0;for(const t of ALL)matched+=Math.min(c[t]||0,w[t]||0);if(matched>best)best=matched;}return best;}
+let state={deck:[],hands:[[],[]],river:[[],[]],points:[0,0],round:1,turn:0,phase:'intro',selected:-1,difficulty:'normal',lastDraw:null,winDiscard:null,ronCandidates:[],highlight:null,revealCpu:false,winningTile:null,serial:0,riichi:[false,false],riichiWaits:[[],[]],riichiMark:[null,null],tsumoPreview:false,doubleRiichi:[false,false],ippatsu:[false,false]};
+function tile(t,mini=false,click=null,latest=false){let el=document.createElement(click?'button':'div');el.className='tile'+(mini?' mini':'')+(latest?' latest':'');if(click)el.type='button';el.setAttribute('aria-label',NAMES[t[0]]+t.slice(1));const im=document.createElement('img');im.src=asset(t);im.alt=NAMES[t[0]]+t.slice(1);im.loading='lazy';im.onerror=()=>{im.remove();const fb=document.createElement('span');fb.className='glyph';fb.textContent=GLYPHS[t[0]][Number(t.slice(1))-1];el.append(fb);};el.append(im);if(click)el.onclick=click;return el;}
+function render(){ $('cpuPts').textContent=state.points[1];$('userPts').textContent=state.points[0];$('roundName').textContent='第'+state.round+'局';$('deckCount').textContent=state.deck.length;$('cpuScore').classList.toggle('current',state.turn===1);$('userScore').classList.toggle('current',state.turn===0);$('cpuHand').classList.toggle('revealed',state.revealCpu);$('cpuHand').replaceChildren(...state.hands[1].map(t=>{if(state.revealCpu){const el=tile(t);if(t===state.winningTile)el.classList.add('win-last');return el;}const d=document.createElement('div');d.className='backtile';return d;}));$('winningBanner').classList.toggle('hidden',!state.revealCpu);if(state.revealCpu)$('winningBanner').textContent='CPUの手牌を公開中 ― 3枚組 ＋ 3枚組 ＋ ペア';for(let p=0;p<2;p++)$(p?'cpuRiver':'userRiver').replaceChildren(...state.river[p].map((t,i)=>{const el=tile(t,true);if(state.riichiMark[p]===i){el.classList.add('riichi-discard');el.title='リーチ宣言牌';el.setAttribute('aria-label',el.getAttribute('aria-label')+'・リーチ宣言牌');}if(state.highlight&&state.highlight.p===p&&i===state.highlight.i)el.classList.add('danger-flash');return el;}));let zone=$('userHand');zone.replaceChildren();state.hands[0].forEach((t,i)=>{const el=tile(t,false,()=>tapTile(i),state.phase==='discard'&&i===state.hands[0].length-1);el.classList.toggle('selected',i===state.selected);el.classList.toggle('tsumo-flash',state.tsumoPreview&&i===state.hands[0].length-1);el.disabled=state.phase!=='discard';zone.append(el);});if(state.hands[0].length===7&&!state.revealCpu){const slot=document.createElement('button');slot.type='button';slot.className='tile draw-slot';slot.setAttribute('aria-label','ここをタップして1枚引く');slot.disabled=state.phase!=='draw';slot.onclick=takeDraw;zone.append(slot);} $('riichiBtn').disabled=!['draw','discard'].includes(state.phase)||state.riichi[0];$('riichiBtn').textContent=state.riichi[0]?'リーチ中':'リーチ −1点';$('drawBtn').disabled=state.phase!=='draw'&&(state.phase!=='discard'||state.selected<0);$('drawBtn').textContent=state.phase==='discard'?'選択した牌を捨てる':'1枚引く';$('drawBtn').classList.toggle('action',true);$('centerState').textContent=({draw:'あなたの番',discard:'牌を選んで捨てる',cpu:'CPU思考中',ron:'ロンできます',tsumoPreview:'ツモ！',end:'決着',intro:'対局準備中'})[state.phase]||'対局中';$('turnSub').textContent=state.phase==='tsumoPreview'?'右端のアガリ牌を確認':state.phase==='discard'?'8枚から1枚選択':state.phase==='draw'?'引いて手を進めよう':'捨て牌から狙いを読む';$('handHint').textContent=state.riichi[0]?(state.phase==='draw'?'リーチ中：白枠からツモ':'リーチ中：引いた牌を捨てます'):state.phase==='discard'?'牌を選択・もう一度素早くタップで捨てる':'右端の白枠またはボタンでツモ';$('cpuScore').classList.toggle('riichi-active',state.riichi[1]);$('userScore').classList.toggle('riichi-active',state.riichi[0]);for(let p=0;p<2;p++){const slot=$(p?'cpuStick':'userStick');slot.replaceChildren();if(state.riichi[p]){const stick=document.createElement('span');stick.className='riichi-stick';stick.title=(p?'CPU':'あなた')+' リーチ宣言中（1000点棒）';stick.setAttribute('role','img');stick.setAttribute('aria-label',(p?'CPU':'あなた')+' リーチ宣言中・千点棒');slot.append(stick);}}}
+function say(msg){$('message').textContent=msg;}
+function modal(title,html,primary,action,secondary,secondaryAction){if(title==='ルール・設定')html+='<div id="soundSettingsSlot"></div>';$('modalTitle').textContent=title;$('modalText').innerHTML=html;$('modeChoice').classList.add('not-landing');$('modalPrimary').textContent=primary;$('modalPrimary').onclick=action;$('modalSecondary').classList.toggle('hidden',!secondary);if(secondary){$('modalSecondary').textContent=secondary;$('modalSecondary').onclick=secondaryAction;}$('modal').classList.remove('hidden');document.body.classList.add('modal-open');if(title==='ルール・設定')window.mountHachiSound($('soundSettingsSlot'));}
+function closeModal(){$('modal').classList.add('hidden');document.body.classList.remove('modal-open');}
+function newMatch(){state.points=[0,0];state.round=1;newRound();}
+function newRound(){$('cpuHand').classList.remove('showdown','grouped');$('winningBanner').classList.remove('announce');const deck=[];for(const t of ALL)for(let i=0;i<4;i++)deck.push(t);for(let i=deck.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}state.deck=deck;state.riichi=[false,false];state.doubleRiichi=[false,false];state.ippatsu=[false,false];state.riichiWaits=[[],[]];state.riichiMark=[null,null];state.tsumoPreview=false;state.hands=[[],[]];state.river=[[],[]];state.selected=-1;state.lastDraw=null;state.highlight=null;state.revealCpu=false;state.winningTile=null;state.serial++;for(let i=0;i<7;i++)for(let p=0;p<2;p++)state.hands[p].push(deck.pop());sortHand(state.hands[0]);sortHand(state.hands[1]);state.turn=state.round%2===1?0:1;state.phase=state.turn===0?'draw':'cpu';closeModal();say(state.turn===0?'あなたの先手。1枚引いてください。':'CPUが先手です。');render();if(state.turn===1)setTimeout(cpuTurn,650);}
+let lastTileTap={i:-1,time:0,serial:-1};
+function tapTile(i){if(state.phase!=='discard')return;if(state.riichi[0]&&i!==state.hands[0].length-1){say('リーチ中は引いた牌だけを捨てられます。');return;}const now=performance.now();if(state.selected===i&&lastTileTap.i===i&&lastTileTap.serial===state.serial&&now-lastTileTap.time<430){lastTileTap={i:-1,time:0,serial:-1};discard();return;}state.selected=i;lastTileTap={i,time:now,serial:state.serial};render();}
+function mainAction(){if(state.phase==='draw')takeDraw();else if(state.phase==='discard')discard();} 
+function takeDraw(){if(state.phase!=='draw')return;if(!state.deck.length){drawGame();return;}const t=state.deck.pop();HachiSound.play('draw');state.hands[0].push(t);state.lastDraw=t;state.selected=-1;if(isWin(state.hands[0])){
+  // Keep the drawn tile at the extreme right and make it pulse before showing the win.
+  state.phase='tsumoPreview';state.tsumoPreview=true;state.turn=0;
+  say('ツモ！ 右端のアガリ牌に注目！');render();
+  const serial=state.serial;
+  setTimeout(()=>{if(serial!==state.serial||state.phase!=='tsumoPreview')return;state.tsumoPreview=false;roundWin(0,'ツモ',2);},1950);
+  return;
+ }state.phase='discard';if(state.riichi[0])state.selected=state.hands[0].length-1;say(state.riichi[0]?'リーチ中：引いた牌を捨ててください。':'手牌から捨てる牌を選んでください。');render();}
+function discard(riichiDeclaration=false){if(state.phase!=='discard')return;if(state.selected<0){say('捨てる牌を選択してください。');return;}if(state.riichi[0]&&!riichiDeclaration&&state.selected!==state.hands[0].length-1){say('リーチ中は引いた牌だけを捨てられます。');return;}let t=state.hands[0].splice(state.selected,1)[0];state.river[0].push(t);HachiSound.play('discard');if(state.riichi[0]&&state.riichiMark[0]===null)state.riichiMark[0]=state.river[0].length-1;if(state.riichi[0]&&!riichiDeclaration){state.ippatsu[0]=false;}state.selected=-1;lastTileTap={i:-1,time:0,serial:-1};state.lastDraw=null;sortHand(state.hands[0]);if(canRon(1,t)){state.phase='cpu';state.highlight={p:0,i:state.river[0].length-1};say('CPUがロン！ 赤く光る牌に注目');render();const serial=state.serial;setTimeout(()=>{if(serial===state.serial&&state.phase==='cpu')roundWin(1,'ロン',3);},1600);return;}state.turn=1;state.phase='cpu';say('CPUが考えています…');render();setTimeout(cpuTurn,530);}
+function canRon(p,t){if(!isWin([...state.hands[p],t]))return false;const waits=waitsFor(state.hands[p]);return !waits.some(x=>state.river[p].includes(x));}
+function waitsFor(h){return ALL.filter(t=>isWin([...h,t]));}
+function riichiPossible(p,i){if(state.riichi[p]||state.hands[p].length!==8)return false;const h=state.hands[p].filter((_,j)=>i!==j);return waitsFor(h).length>0;}
+function declareRiichi(){
+ if(state.riichi[0]||!['draw','discard'].includes(state.phase))return;
+ if(state.phase==='draw'){
+  const waits=waitsFor(state.hands[0]);
+  if(!waits.length){say('まだテンパイしていません。リーチはあと1枚でアガれるときだけ可能です。');return;}
+  state.riichi[0]=true;state.doubleRiichi[0]=state.river[0].length===0;state.ippatsu[0]=true;state.riichiWaits[0]=waits;state.points[0]-=1;HachiSound.play('riichi');
+  say('リーチ！ −1点。白枠から1枚引いてください。アガれば＋2点！');render();return;
+ }
+ if(state.selected<0){say('リーチをかけるには、先に捨てる牌を選択してください。');return;}
+ if(!riichiPossible(0,state.selected)){say('その牌を捨ててもテンパイになりません。別の牌を選ぶか、通常通り捨ててください。');return;}
+ const h=state.hands[0].filter((_,i)=>i!==state.selected);
+ state.riichi[0]=true;state.doubleRiichi[0]=state.river[0].length===0;state.ippatsu[0]=true;state.riichiWaits[0]=waitsFor(h);state.points[0]-=1;HachiSound.play('riichi');
+ say('リーチ！ 1点支払い。アガれば追加2点！');discard(true);
+}
+function cpuPick(h){const candidates=h.map((t,i)=>{let rest=h.filter((_,j)=>j!==i);let current=potential(rest);let live=count([...state.river[0],...state.river[1],...rest]);let waitValue=0;for(const x of ALL){let n=4-(live[x]||0);if(n>0&&isWin([...rest,x]))waitValue+=n;}let danger=0;if(state.difficulty==='hard'){// Based only on visible tile information: favor recently repeated opponent discards as safer.
+let seen=state.river[0].filter(x=>x===t).length;danger=seen?0:Math.max(0,1.4-(state.river[0].length/15));}
+return {i,t,score:current*12+waitValue*3-danger+(Math.random()-.5)*(state.difficulty==='hard'?1.2:5)};});candidates.sort((a,b)=>b.score-a.score);return candidates[0].i;}
+function cpuTurn(){if(state.phase!=='cpu')return;if(!state.deck.length){drawGame();return;}const t=state.deck.pop();state.hands[1].push(t);if(isWin(state.hands[1])){roundWin(1,'ツモ',2);return;}let pick=state.riichi[1]?state.hands[1].length-1:cpuPick(state.hands[1]);if(!state.riichi[1]){let test=state.hands[1].filter((_,i)=>i!==pick),w=waitsFor(test);if(w.length&&(state.difficulty==='hard'?Math.random()<.75:Math.random()<.48)){state.riichi[1]=true;state.doubleRiichi[1]=state.river[1].length===0;state.ippatsu[1]=true;state.riichiWaits[1]=w;state.points[1]-=1;HachiSound.play('riichi');say('CPUがリーチ！');}}if(state.riichi[1]&&state.river[1].length>0)state.ippatsu[1]=false;let out=state.hands[1].splice(pick,1)[0];state.river[1].push(out);HachiSound.play('discard');if(state.riichi[1]&&state.riichiMark[1]===null)state.riichiMark[1]=state.river[1].length-1;sortHand(state.hands[1]);state.turn=0;const can=canRon(0,out);if(can){state.phase='ron';state.highlight={p:1,i:state.river[1].length-1};render();say('CPUの捨て牌が赤く点滅！ この牌でロンできます');const serial=state.serial;setTimeout(()=>{if(serial!==state.serial||state.phase!=='ron')return;modal('ロンのチャンス！',`<p>CPUが捨てた <b>${NAMES[out[0]]}${out.slice(1)}</b> でアガれます。<br>ロンすると<b>3点</b>です。</p>`,'ロンでアガる',()=>roundWin(0,'ロン',3),'見送る',()=>{closeModal();state.highlight=null;state.phase='draw';say('ロンを見送りました。1枚引いてください。');render();});},1700);return;}if(state.deck.length===0){drawGame();return;}state.phase='draw';say('CPUは'+NAMES[out[0]]+out.slice(1)+'を捨てました。');render();}
+// Find the exact winning decomposition so the result is visually understandable.
+function winGroups(hand){if(fourPairs(hand)){const c=count(hand);return Object.keys(c).map(t=>[t,t]);}const c=count(hand);for(const pair of ALL){if((c[pair]||0)<2)continue;const rem={...c};rem[pair]-=2;for(const a of seqs){if(!a.every((t,i)=>a.slice(0,i+1).filter(x=>x===t).length<=rem[t]))continue;const r={...rem};a.forEach(t=>r[t]--);for(const b of seqs){const r2={...r};b.forEach(t=>r2[t]--);if(ALL.every(t=>(r2[t]||0)===0))return [a,b,[pair,pair]];}}}return [hand.slice(0,3),hand.slice(3,6),hand.slice(6)];}
+function groupHtml(hand,winTile){const sets=winGroups(hand);return `<div class="win-sets">${sets.map((g,k)=>`<div><div class="win-set">${g.map(t=>`<span class="tile${t===winTile?' win-last':''}" role="img" aria-label="${NAMES[t[0]]}${t.slice(1)}"><img src="${asset(t)}" alt="${NAMES[t[0]]}${t.slice(1)}" onerror="this.outerHTML='${GLYPHS[t[0]][Number(t.slice(1))-1]}'"></span>`).join('')}</div><div class="win-caption">${g.length===2?'ペア（2枚）':'3枚組'}</div></div>`).join('')}</div>`;}
+function cpuShowdown(hand,winTile,serial){
+  const zone=$('cpuHand');
+  zone.classList.remove('revealed','grouped');zone.classList.add('showdown');
+  zone.replaceChildren(...hand.map((_,i)=>{const d=document.createElement('div');d.className='backtile';d.style.setProperty('--delay',(i*95)+'ms');return d;}));
+  $('winningBanner').classList.add('hidden');
+  say('CPUがアガリ！ 手牌が倒れます…');
+  setTimeout(()=>{
+    if(state.serial!==serial||state.phase!=='end')return;
+    const groups=winGroups(hand);zone.classList.remove('showdown');zone.classList.add('grouped');
+    let n=0;let marked=false;
+    zone.replaceChildren(...groups.map((g,k)=>{
+      const wrap=document.createElement('div');wrap.className='showdown-group';wrap.dataset.name=g.length===2?'ペア':'3枚組';
+      for(const t of g){const el=tile(t);el.style.setProperty('--delay',(n++*110)+'ms');if(t===winTile&&!marked){el.classList.add('win-last');marked=true;}wrap.append(el);}
+      return wrap;
+    }));
+    $('winningBanner').textContent=fourPairs(hand)?'CPUのアガリ形：四対子（ペア×4）':'CPUのアガリ形：3枚組 ＋ 3枚組 ＋ ペア';
+    $('winningBanner').classList.remove('hidden');$('winningBanner').classList.add('announce');
+    say('CPUの完成形を公開中。赤枠がアガリ牌です。');
+  },1050);
+}
+function rankRoles(h,kind,last){
+ const c=count(h),suits=new Set(h.map(t=>t[0]));const result=[];
+ const add=(name,pt)=>result.push({name,pt});
+ if(suits.size===1)add('清一色',4);
+ if(h.every(t=>+t.slice(1)>=2&&+t.slice(1)<=8))add('タンヤオ',1);
+ if(h.filter(t=>t[0]==='p').length===4)add('二色均等',1);
+ if(h.every(t=>+t.slice(1)%2===0))add('オール偶数',1);
+ if(h.every(t=>+t.slice(1)%2===1))add('オール奇数',1);
+ if(fourPairs(h)){add('四対子',3);return result;}
+ const g=winGroups(h),a=g[0],b=g[1],pair=g[2];
+ const isSeq=x=>x.length===3&&x[0]!==x[1];
+ const isTrip=x=>x.length===3&&x[0]===x[1];
+ if(isTrip(a)&&isTrip(b))add('対々和',2);
+ if(isSeq(a)&&isSeq(b)){
+  if(a.join(',')===b.join(','))add('一盃口',2);
+  if(a[0][0]!==b[0][0]&&a.map(t=>t.slice(1)).join(',')===b.map(t=>t.slice(1)).join(','))add('二色同順',2);
+  // Pinfu requires a two-sided winning wait, not just two sequences.
+  if(kind==='ツモ'||kind==='ロン'){
+   const before=h.slice();const idx=before.indexOf(last);
+   if(idx>=0){before.splice(idx,1);let twoSided=false;
+    for(const grp of [a,b]){if(!grp.includes(last))continue;const remaining=grp.slice();remaining.splice(remaining.indexOf(last),1);
+     if(remaining.length===2&&Math.abs(+remaining[0].slice(1)-+remaining[1].slice(1))===1){const n=Math.min(+remaining[0].slice(1),+remaining[1].slice(1));if(n>=2&&n<=7)twoSided=true;}}
+    if(twoSided)add('平和',1);
+   }
+  }
+ }
+ if(isTrip(a)&&isTrip(b)&&a[0].slice(1)===b[0].slice(1)&&a[0][0]!==b[0][0])add('二色同刻',3);
+ if([a,b,pair].every(x=>x.some(t=>['1','9'].includes(t.slice(1)))))add('ジュンチャン',3);
+ return result;
+}
+function roundWin(winner,kind,points){
+ const last=kind==='ロン'?state.river[1-winner].at(-1):state.hands[winner].at(-1);
+ if(kind==='ロン'&&last)state.hands[winner].push(last);
+ const roleList=rankRoles(state.hands[winner],kind,last);const rolePoints=roleList.reduce((n,r)=>n+r.pt,0);const riichiBonus=state.riichi[winner]?2:0;const ippatsuBonus=state.riichi[winner]&&state.ippatsu[winner]?1:0;const doubleBonus=state.riichi[winner]&&state.doubleRiichi[winner]?1:0;const opponentRiichiBonus=state.riichi[1-winner]?1:0;const total=points+rolePoints+riichiBonus+ippatsuBonus+doubleBonus+opponentRiichiBonus;state.points[winner]+=total;state.phase='end';state.turn=winner;state.highlight=null;
+ state.winningTile=last;state.revealCpu=false;state.tsumoPreview=false;state.serial++;
+ const serial=state.serial;render();
+ const final=state.points[winner]>=20;const h=state.hands[winner].slice();
+ const showResult=()=>{
+   if(serial!==state.serial||state.phase!=='end')return;
+   HachiSound.play(winner===0?'result':'loss');modal(final?(winner===0?'あなたの勝利！':'CPUの勝利'):(winner===0?'アガリ！':'CPUがアガリ'),`<p>${winner===0?'あなた':'CPU'}の<b>${kind}</b>！ <b>+${total}点</b></p><p class="small">${winner===1?'上段にCPUの完成手牌を公開しました。':''}赤枠がアガリ牌です。</p>${groupHtml(h,last)}<p><b>内訳：</b>${kind} ${points}点${state.riichi[winner]?' ＋ リーチ成功2点':''}${ippatsuBonus?' ＋ 一発1点':''}${doubleBonus?' ＋ ダブルリーチ1点':''}${opponentRiichiBonus?' ＋ 相手のリーチ棒1点':''}${roleList.length?' ＋ '+roleList.map(r=>r.name+' '+r.pt+'点').join(' ＋ '):'（役なし）'}</p><p>現在 あなた ${state.points[0]}点 — CPU ${state.points[1]}点</p>${final?'<p>20点先取でマッチ終了！</p>':''}`,final?'もう一度対戦':'次の局へ',()=>{if(final)newMatch();else{state.round++;newRound();}});
+ };
+ if(winner===1){
+   HachiSound.play(kind==='ロン'?'ron':'tsumo');
+   // Let the discarded tile and winning hand register visually before the result modal.
+   cpuShowdown(h,last,serial);
+   setTimeout(showResult,3400);
+ }else{
+   HachiSound.play(kind==='ロン'?'ron':'tsumo');
+   say('あなたの'+kind+'！ '+total+'点獲得');showResult();
+ }
+}
+function drawGame(){state.phase='end';render();say('山がなくなりました。流局です。');modal('流局','<p>山の牌をすべて引き終えました。<br>この局は得点なしです。</p>','次の局へ',()=>{state.round++;newRound();});}
+window.mountHachiSound($('introSoundSlot'));$('riichiBtn').onclick=declareRiichi;$('drawBtn').onclick=mainAction;$('menuBtn').onclick=()=>modal('ルール・設定','<p>7枚持ち、1枚引いて8枚。<b>3枚組を2つ＋ペア</b>で勝ち。</p><p>3枚組は同じ種類で「連番3枚」か「同じ牌3枚」。<br>ツモ2点、ロン3点＋役点。リーチは−1点で宣言、アガリ時＋2点。一発・ダブルリーチは各＋1点。相手がリーチしていればアガリ時にその1点も獲得。先に20点で勝利。</p><p>相手の捨て牌から残り牌を推理！ロンにはフリテン（自分の捨て牌に待ち牌が含まれたら不可）があります。</p><p class="small">この局を破棄して新しいマッチにする場合は「最初から」を選んでください。</p>','対局に戻る',closeModal,'最初から',newMatch);
+$('normal').onclick=()=>setDifficulty('normal');$('hard').onclick=()=>setDifficulty('hard');function setDifficulty(v){state.difficulty=v;$('normal').classList.toggle('active',v==='normal');$('hard').classList.toggle('active',v==='hard');}
+async function startMatchFullscreen(){
+ // Request before changing UI or awaiting: the start button click is a user gesture.
+ if(!document.fullscreenElement && document.documentElement.requestFullscreen){
+  try{const pending=document.documentElement.requestFullscreen({navigationUI:'hide'});
+   newMatch();
+   await pending;
+   try{await screen.orientation?.lock?.('portrait');}catch(_){}
+  }catch(_){say('全画面が許可されませんでした。ホーム画面からの起動、または⛶全画面をお試しください。');}
+ }else{newMatch();}
+}
+$('modalPrimary').onclick=startMatchFullscreen;
+// Fullscreen API requires a user gesture in ordinary mobile browsers.
+const fullBtn=$('fullscreenBtn');
+function updateFullscreenButton(){if(!fullBtn)return;fullBtn.textContent=document.fullscreenElement?'⛶ 戻る':'⛶ 全画面';}
+fullBtn.addEventListener('click',async()=>{
+ try{
+  if(document.fullscreenElement){await document.exitFullscreen();return;}
+  if(!document.documentElement.requestFullscreen){say('ホーム画面に追加すると全画面で起動できます。');return;}
+  await document.documentElement.requestFullscreen();
+  try{await screen.orientation?.lock?.('portrait');}catch(_){}
+ }catch(_){say('ブラウザから全画面にできない場合は、ホーム画面に追加して起動してください。');}
+});
+document.addEventListener('fullscreenchange',updateFullscreenButton);
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+render();
+</script><div style="text-align:center;margin:12px auto;max-width:500px"><a href="./multiplayer.html" style="display:inline-block;padding:14px 22px;background:#215a4b;color:#ffe4ab;border:1px solid #c4a55f;border-radius:12px;font-weight:700;text-decoration:none">P2P対戦（試験版）を開く</a><p style="font-size:12px;opacity:.85">既存のRender対戦は multiplayer-render.html から利用できます</p></div></body></html>

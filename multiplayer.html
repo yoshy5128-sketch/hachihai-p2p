@@ -1,0 +1,383 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#103d33"><title>八牌・P2P β v0.9.0</title><style>
+*{box-sizing:border-box}html,body{margin:0;background:#082b25;color:#f3eddc;font-family:system-ui,sans-serif}body{min-height:100dvh}main{max-width:620px;margin:auto;padding:12px 12px max(20px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;min-height:100dvh}header{display:flex;justify-content:space-between;align-items:center}h1{font-size:24px;margin:0;color:#e7ca8b}a{color:#f8d998;text-decoration:none}.panel{background:#17493d;border:1px solid #356859;border-radius:12px;padding:14px}.controls{display:flex;gap:8px;flex-wrap:wrap}.btn{cursor:pointer;background:#264f43;color:#fff8e5;border:1px solid #75978a;border-radius:9px;padding:12px 15px;font-size:15px;font-weight:700;touch-action:manipulation}.btn.primary{background:#e4c275;color:#172f2a;border-color:#e4c275}.btn:disabled{opacity:.38;cursor:default}input{width:100%;padding:13px;background:#092f29;color:white;border:1px solid #8caa9d;border-radius:8px;font-size:16px}label{font-size:13px;color:#d0e2d9;display:block;margin:5px 0}.field{margin:12px 0}#status{padding:9px;border-radius:8px;background:#235849;min-height:40px}#game{display:none;flex-direction:column;gap:10px}.scores{display:flex;justify-content:space-between;text-align:center;gap:8px}.score{background:#245447;padding:9px;border-radius:9px;flex:1}.score strong{display:block;font-size:24px}.table{background:radial-gradient(ellipse,#215b49,#0e3b31);border:2px solid #426e5e;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px}.backs,.hand,.river{display:flex;flex-wrap:wrap;gap:3px;align-items:center;min-height:50px}.backs{justify-content:center}.river{height:84px;align-content:flex-start;overflow:auto;gap:3px}.tile{width:clamp(30px,10vw,47px);height:clamp(43px,14vw,65px);background:#f7f4e8;border:2px solid #b3b6a8;border-bottom-width:5px;border-radius:5px;padding:1px;color:#193a35;display:grid;place-items:center;font-size:28px;line-height:1;flex:none;position:relative}.tile img{width:100%;height:100%;object-fit:contain}.tile.small{width:27px;height:37px;font-size:20px;border-bottom-width:3px}.tile.back{background:linear-gradient(135deg,#1b7385,#154b61);border-color:#e6efea;color:#b7d8df}.tile.pick{border-color:#f0bf5c;transform:translateY(-8px)}.tile.mark{transform:rotate(-90deg) scale(.85)}.tile.glow{outline:3px solid #fd5757;animation:blink .5s alternate infinite}.tile.slot{background:transparent;border:2px dashed white;animation:blink 1s alternate infinite}@keyframes blink{from{opacity:.5}to{opacity:1}}.caption{font-size:12px;color:#bfd9cb}.section{display:flex;justify-content:space-between;align-items:center}.stick{display:inline-block;width:56px;height:12px;background:#e7e1cb;border:1px solid #b2aa88;border-radius:7px;margin-left:6px;vertical-align:middle}.stick:after{content:'';display:block;width:8px;height:8px;border-radius:50%;background:#cc333a;margin:1px auto}.notice{font-size:14px;text-align:center;color:#e9d49c;padding:6px}.notice.furiten-active{color:#ffdf83;font-weight:750;background:#70412c;border:1px solid #d99359;border-radius:8px}.overlay{position:fixed;inset:0;background:#051a16e8;display:none;align-items:center;justify-content:center;padding:16px;z-index:10}.overlay.show{display:flex}.dialog{max-width:430px;width:100%;max-height:90dvh;overflow:auto;background:#17483e;padding:20px;border:1px solid #c5a86a;border-radius:14px;text-align:center}.winTiles{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin:15px 0}.winTiles .tile{width:35px;height:50px}.hidden{display:none!important}#handArea{justify-content:center}#lobby{margin-top:12px}.room{font-size:26px;font-weight:800;letter-spacing:4px;color:#ffe19e}.last{border-color:#fa5b57!important}.formrow{display:flex;gap:7px}.formrow input{flex:1;min-width:0}@media(max-width:390px){.tile{width:10.4vw;height:14.8vw}.backs .tile{width:8vw;height:11vw}.river{height:84px}.tile.small{width:25px;height:34px}}
+
+/* v0.7.3: compact single-screen mobile table */
+#handArea{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;justify-content:center;align-items:end;width:100%;min-height:0}
+#handArea .tile{width:100%;height:auto;aspect-ratio:47/65;min-width:0;min-height:0;max-height:66px;padding:1px;touch-action:manipulation}
+#handArea .tile img{min-width:0;min-height:0;object-fit:contain}
+#game>.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex-wrap:nowrap}
+#game>.controls .btn{min-width:0;padding:11px 4px;white-space:nowrap}
+#game .table{min-width:0}
+#game .river{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));grid-auto-rows:min-content;justify-items:center;align-content:start;gap:2px;min-height:0;overflow-y:auto;overflow-x:hidden}
+#game .river .tile.small{width:min(100%,26px);height:auto;aspect-ratio:27/37;max-height:37px;min-width:0;font-size:16px}
+#game .backs{flex-wrap:nowrap;gap:2px;min-height:0}
+#game .backs .tile{width:clamp(24px,7vw,36px);height:auto;aspect-ratio:47/65;font-size:16px;min-width:0}
+body.in-game{overflow:hidden;height:100dvh}
+body.in-game main{height:100dvh;min-height:0;max-height:100dvh;overflow:hidden;padding-bottom:max(6px,env(safe-area-inset-bottom));gap:5px}
+body.in-game header{flex:none}
+body.in-game #status{flex:none;min-height:0;padding:5px 9px;font-size:12px}
+body.in-game #game{display:flex;flex:1;min-height:0;gap:5px;overflow:hidden}
+body.in-game #game .scores,body.in-game #game>.section,body.in-game #game>.controls{flex:none}
+body.in-game #game .score{padding:4px}
+body.in-game #game .score strong{font-size:19px}
+body.in-game #game .room{font-size:20px;letter-spacing:2px}
+body.in-game #game .table{flex:1;min-height:0;overflow:hidden;padding:8px;gap:4px}
+body.in-game #game .caption{font-size:11px;line-height:1.2}
+body.in-game #game .river{flex:1;min-height:0;height:auto}
+body.in-game #game .notice{padding:1px;font-size:12px;line-height:1.2;min-height:15px;flex:none}
+body.in-game #game #handArea{flex:none}
+body.in-game #game>.controls .btn{padding:9px 3px;font-size:13px}
+@media(max-width:430px){body.in-game main{padding:6px 7px max(5px,env(safe-area-inset-bottom))}body.in-game header h1{font-size:17px}body.in-game header a{font-size:12px}body.in-game #game .table{padding:6px;gap:3px}body.in-game #game .backs .tile{width:min(7.2vw,31px)}#game .river{grid-template-columns:repeat(11,minmax(0,1fr))}#handArea .tile{max-height:60px}body.in-game #game .scores .score{font-size:12px}}
+@media(max-height:690px){body.in-game #game .table{gap:2px}body.in-game #game .scores .score strong{font-size:17px}body.in-game #game .backs .tile{width:25px}body.in-game #game #handArea .tile{max-height:48px}body.in-game #game>.controls .btn{padding:7px 3px}body.in-game #status{font-size:11px}}
+
+/* v0.7.4: Desktop-only fixed tile geometry; preserve narrow mobile layout */
+@media (min-width: 431px) {
+  #game #handArea {
+    display: grid;
+    grid-template-columns: repeat(8, 47px);
+    justify-content: center;
+    gap: 3px;
+    width: 100%;
+  }
+  #game #handArea .tile {
+    box-sizing: border-box;
+    width: 47px;
+    height: 65px;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+  #game .river {
+    display: grid;
+    grid-template-columns: repeat(11, 27px);
+    justify-content: start;
+    justify-items: start;
+    column-gap: 2px;
+    row-gap: 2px;
+  }
+  #game .river .tile.small {
+    width: 27px;
+    height: 37px;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+}
+
+/* ロン確認：自分だけに完成牌を提示。小さなスマホでも1行に8枚収める */
+.ron-preview{margin:12px 0 7px;padding:12px 8px;background:#0e352d;border:1px solid #537868;border-radius:12px}
+.ron-preview .caption{margin-bottom:7px;text-align:left}
+.ron-preview-row{display:grid;grid-template-columns:repeat(7,minmax(0,1fr)) minmax(0,1.12fr);gap:3px;align-items:end;width:100%}
+.ron-preview-row .tile{width:100%!important;height:auto!important;aspect-ratio:47/65;padding:1px;min-width:0;font-size:clamp(12px,4vw,24px);border-bottom-width:4px;pointer-events:none}
+.ron-preview-row .tile img{width:100%;height:100%;object-fit:contain}
+.ron-preview-row .tile.ron-winning{border:2px solid #ff6767;border-bottom-width:4px;box-shadow:0 0 0 2px #ff676770;animation:ron-pulse .65s alternate infinite}
+@keyframes ron-pulse{from{box-shadow:0 0 0 1px #ff676755}to{box-shadow:0 0 0 4px #ff6767bb}}
+.ron-legend{display:flex;justify-content:space-between;gap:4px;margin-top:8px;font-size:11px;color:#f0dbc0}
+.ron-legend strong{color:#ffabab}
+@media(max-width:390px){.dialog{padding:12px}.ron-preview{padding:9px 6px}.ron-preview-row{gap:2px}}
+.header-actions{display:flex;align-items:center;gap:8px}.header-actions .btn{font-size:12px;padding:7px 9px}#onlineSettings{z-index:80}#onlineSettings .dialog{max-height:calc(100dvh - 25px);overflow:auto}#onlineSettings .dialog p{line-height:1.6;font-size:13px}
+/* v0.8.3: PC multiplayer follows the CPU screen's compact 530px table. */
+@media (min-width: 431px) {
+  main { width: min(100%,530px); max-width:530px; padding:12px 12px max(12px,env(safe-area-inset-bottom)); }
+  #game .table { width:100%; min-width:0; }
+  #game #handArea { grid-template-columns:repeat(8,47px); justify-content:center; gap:3px; max-width:100%; }
+  #game #handArea .tile { width:47px; height:65px; max-width:47px; min-width:0; flex:none; }
+  #game .river { width:100%; max-width:346px; align-self:center; grid-template-columns:repeat(11,27px); justify-content:center; justify-items:center; gap:2px; }
+  #game .river .tile.small { width:27px; height:37px; }
+}
+/* v0.8.5: Desktop fullscreen fills the viewport; mahjong table retains CPU-like dimensions */
+:fullscreen{background:#082b25}
+html:fullscreen,body:fullscreen{width:100%;height:100%;overflow:hidden}
+body.in-game{height:100dvh;overflow:hidden}
+body.in-game main{width:min(100%,530px);max-width:530px;margin:0 auto;height:100dvh;min-height:0;overflow:hidden}
+@media(max-width:430px){body.in-game main{width:100%}}
+#onlineFullscreen{white-space:nowrap}
+@media(max-width:390px){.header-actions{gap:4px}.header-actions .btn{padding:6px 5px;font-size:11px}header h1{font-size:19px}}
+
+.voice-head-buttons{display:flex;align-items:center;gap:7px}.voice-head-buttons .btn{padding:4px 9px;font-size:12px}.voice-toggle{display:none;font-size:11px;padding:5px 8px;white-space:nowrap;border:1px solid #8bcbb5;background:#285c4d;color:#f1fff8;border-radius:8px;cursor:pointer}.voice-toggle.visible{display:inline-flex;align-items:center;justify-content:center}#game>.section.room-round-row{display:flex;justify-content:space-between;align-items:center;gap:5px;min-height:29px}.room-round-right{display:flex;align-items:center;gap:7px;flex-shrink:0}@media(max-width:390px){.voice-toggle{font-size:10px;padding:4px 6px}.room-round-right{gap:4px}body.in-game #game .room{font-size:17px;letter-spacing:1px}}
+.voice-panel{background:#164238;border:1px solid #547669;border-radius:12px;padding:9px 11px;max-width:530px;width:100%;margin:0 auto}.voice-panel.hidden{display:none}.voice-head{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px}.voice-head span{color:#bce8d0;font-size:12px}.voice-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.voice-actions .btn{padding:6px 9px;font-size:12px}.voice-volume{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px}.voice-volume input{width:110px;accent-color:#e4c275}#voiceRemote{display:none}body.in-game #voicePanel{flex-shrink:0}@media(max-height:700px){.voice-panel{padding:5px 9px}.voice-actions{margin-top:3px}.voice-actions .btn{padding:4px 7px}}
+.header-actions .nav-home{font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;line-height:1.2}
+@media(max-width:390px){.header-actions .nav-home{font-size:11px}}
+</style></head><body><main><header><h1>八牌 <small style="font-size:12px">P2P β v0.9.0</small></h1><div class="header-actions"><button id="onlineFullscreen" class="btn" type="button" title="全画面に切り替える">⛶ 全画面</button><button id="onlineSettingsOpen" class="btn" type="button">ルール・設定</button><a class="nav-home" href="./index.html">トップへ戻る</a></div></header><section id="lobby" class="panel"><div>同じWi-Fi・離れた場所のどちらでも部屋番号で対戦できます。</div><div class="field"><label for="endpoint">P2P通信（Render不要）</label><div style="font-size:12px;line-height:1.6">直接接続方式：接続コードをコピーして相手に送ります（初回のみ）。</div><input id="endpoint" type="hidden" value="p2p"></div><div class="field"><label for="name">プレイヤー名</label><input id="name" value="プレイヤー" maxlength="16"></div><div class="controls"><button class="btn primary" id="create">部屋を作る</button></div><div class="field"><label for="code">6桁の部屋番号</label><div class="formrow"><input id="code" inputmode="numeric" maxlength="6" placeholder="123456"><button class="btn primary" id="join">参加する</button></div></div><div id="signalPanel" class="field" style="display:none;background:#0d3028;border:1px solid #8ba892;border-radius:10px;padding:10px">
+<strong id="signalTitle">P2P 接続情報</strong><div id="signalHint" style="font-size:12px;margin:6px 0;line-height:1.6"></div>
+<textarea id="signalOut" readonly rows="4" style="width:100%;font-size:11px" placeholder="生成された接続コード"></textarea>
+<button class="btn" type="button" id="copySignal">接続コードをコピー</button>
+<div class="field"><label for="signalIn">相手から受け取った接続コードを貼り付け</label><textarea id="signalIn" rows="4" style="width:100%;font-size:11px"></textarea></div>
+<button class="btn primary" type="button" id="applySignal">相手のコードを読み込む</button>
+</div><p class="caption">WebRTCによる直接通信の試験版。遠隔地ではネットワークによって接続できない場合があります。</p></section><div id="status" role="status">通信待機中</div><section id="voicePanel" class="voice-panel hidden" aria-label="ボイスチャット"><div class="voice-head"><strong>🎙 ボイスチャット</strong><div class="voice-head-buttons"><span id="voiceStatus" role="status">通話OFF</span><button class="btn" id="voiceClose" type="button" aria-label="音声設定を閉じる">閉じる ✕</button></div></div><div class="voice-actions"><button class="btn" id="voiceStart" type="button">マイクON・通話開始</button><button class="btn" id="voiceStop" type="button" disabled>マイクOFF</button><button class="btn" id="voicePlay" type="button">🔊 音声再生</button></div><label class="voice-volume">相手の声 <input id="voiceVolume" type="range" min="0" max="100" value="80" aria-label="相手の声の音量"><span id="voiceVolumeText">80%</span></label><audio id="voiceRemote" autoplay playsinline></audio></section><section id="game"><div class="scores"><div class="score"><span id="otherName">相手</span><strong id="otherPts">0</strong></div><div class="score"><span id="selfName">あなた</span><strong id="selfPts">0</strong></div></div><div class="section room-round-row"><span>部屋番号 <span class="room" id="roomCode"></span></span><div class="room-round-right"><span id="round">第1局</span><button id="voiceToggle" class="voice-toggle" type="button" aria-controls="voicePanel" aria-expanded="true">🎙 ボイスOFF</button></div></div><div class="table"><div class="caption">相手の手牌</div><div class="backs" id="backs"></div><div class="section caption"><span>相手の捨て牌 <span id="otherStick"></span></span><span>山：<b id="deck">58</b></span></div><div class="river" id="otherRiver"></div><div class="notice" id="turnMessage">対戦待機中</div><div class="section caption"><span>あなたの捨て牌 <span id="selfStick"></span></span></div><div class="river" id="selfRiver"></div><div class="caption">あなたの手牌（同じ牌を素早く2回押して捨てることもできます）</div><div class="hand" id="handArea"></div></div><div class="controls"><button class="btn" id="riichi">リーチ −1点</button><button class="btn primary" id="mainAction">1枚引く</button></div></section></main><div class="overlay" id="overlay"><div class="dialog"><h2 id="dlgTitle">結果</h2><div id="dlgText"></div><div class="winTiles" id="winTiles"></div><div class="controls" style="justify-content:center"><button class="btn primary" id="dlgAction">次へ</button><button class="btn" id="dlgSkip" style="display:none">見送る</button></div></div></div>
+<div id="onlineSettings" class="overlay"><div class="dialog"><h2>ルール・設定</h2><p>7枚から1枚ツモして8枚でアガリ。3枚組×2＋ペア、または四対子で完成。ツモ2点、ロン3点、役ボーナスを加算。リーチは宣言時−1点、アガリ時＋2点。一発・ダブルリーチ各＋1点。相手がリーチ中にアガれば相手のリーチ棒＋1点も獲得。</p><div id="onlineSoundSlot"></div><button id="onlineSettingsClose" class="btn primary" type="button">戻る</button></div></div><script>
+/* 八牌効果音：ユーザー操作後に再生。オンラインでは状態更新から鳴動を判断 */
+(function(){
+ const cues={draw:'01_draw_soft.wav',slide:'02_draw_slide.wav',discard:'03_discard_clack.wav',heavy:'04_discard_heavy.wav',riichi:'05_riichi.wav',ron:'06_ron.wav',tsumo:'07_tsumo_win.wav',result:'08_result.wav',loss:'09_loss.wav'};
+ const audio={};let enabled=true,vol=.65;
+ for(const [name,file] of Object.entries(cues)){
+   const sound=new Audio('./sounds/'+file);sound.preload='auto';audio[name]=sound;
+ }
+ window.HachiSound={
+   play(name){if(!enabled||!audio[name])return;try{const a=audio[name].cloneNode();a.volume=vol;a.play().catch(()=>{});}catch(_){}},
+   setEnabled(v){enabled=!!v;localStorage.setItem('hachihai-sound-on',enabled?'1':'0');},
+   setVolume(v){vol=Math.max(0,Math.min(1,Number(v)/100));localStorage.setItem('hachihai-sound-vol',String(Math.round(vol*100)));},
+   get enabled(){return enabled},get volume(){return Math.round(vol*100)}
+ };
+ enabled=localStorage.getItem('hachihai-sound-on')!=='0';const saved=localStorage.getItem('hachihai-sound-vol');if(saved!==null)vol=Math.max(0,Math.min(1,Number(saved)/100));
+ window.mountHachiSound=function(target){
+  if(!target)return;
+  target.innerHTML='<div class="sound-settings"><button id="soundToggle" type="button">♪ 音 ON</button><label for="soundVolume">音量 <span id="soundPercent"></span></label><input id="soundVolume" type="range" min="0" max="100" step="5" aria-label="効果音の音量"></div>';
+  const b=target.querySelector('#soundToggle'),v=target.querySelector('#soundVolume'),pct=target.querySelector('#soundPercent');
+  v.value=window.HachiSound.volume;
+  function refresh(){b.textContent=window.HachiSound.enabled?'♪ 音 ON':'♪ 音 OFF';pct.textContent=v.value+'%';}
+  b.addEventListener('click',()=>{window.HachiSound.setEnabled(!window.HachiSound.enabled);refresh();if(window.HachiSound.enabled)window.HachiSound.play('draw');});
+  v.addEventListener('input',()=>{window.HachiSound.setVolume(v.value);refresh();});refresh();
+ };
+ const css=document.createElement('style');css.textContent='.sound-settings{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:12px 0;padding:12px;border:1px solid #b99f69;border-radius:12px;background:#092c25;color:#ffecbe}.sound-settings button{background:#22594c;color:#ffe5aa;border:1px solid #b99f69;border-radius:8px;padding:8px 10px;font-weight:bold}.sound-settings label{font-size:13px;white-space:nowrap}.sound-settings input{width:min(100%,175px);accent-color:#e4c275;touch-action:pan-x}';document.head.append(css);
+
+})();
+</script>
+<script type="module">
+import {createHostGame} from "./p2p-engine.js";
+const $=s=>document.getElementById(s),names={p:'筒',m:'萬'},glyph={p:['🀙','🀚','🀛','🀜','🀝','🀞','🀟','🀠','🀡'],m:['🀇','🀈','🀉','🀊','🀋','🀌','🀍','🀎','🀏']};let ws=null,seat=-1,S=null,selected=-1,lastTap={i:-1,t:0},endShown=false,connectionEnded=false;$('endpoint').value='p2p';
+window.mountHachiSound($('onlineSoundSlot'));
+$('onlineSettingsOpen').onclick=()=>$('onlineSettings').classList.add('show');
+$('onlineSettingsClose').onclick=()=>$('onlineSettings').classList.remove('show');
+function status(s){$('status').textContent=s}
+let peer=null, dataChannel=null,hostEngine=null,hostMode=false,p2pConnected=false,signalStage='',sessionCode='';
+const rtcConfig={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
+function deliver(m){
+if(m.type==='voice_signal'){void receiveVoiceSignal(m);return;}if(m.type==='voice_state'){remoteMicOn=!!m.enabled;refreshVoiceStatus();return;}if(m.type==='error'){status('エラー：'+m.message);return;}if(m.type==='notice'){status(m.message);return;}if(m.type==='joined'){seat=m.seat;showVoicePanel(true);$('lobby').classList.add('hidden');$('game').style.display='flex';document.body.classList.add('in-game');$('roomCode').textContent=m.room;status('部屋へ参加しました。相手を待っています');return;}if(m.type==='state'){const old=S;S=m;playStateSounds(old,m);render();refreshVoiceStatus();return;}
+}
+function send(obj){
+ if(!p2pConnected){status('P2P接続待機中です');return;}
+ if(hostMode){
+   if(obj.type==='voice_signal'||obj.type==='voice_state'){dataChannel.send(JSON.stringify(obj));return;}
+   hostEngine?.message(0,obj);
+ } else dataChannel.send(JSON.stringify(obj));
+}
+function receiveFromPeer(m){
+ if(hostMode){
+   if(m.type==='hello'){hostEngine.start(m.name);return;}
+   if(m.type==='voice_signal'||m.type==='voice_state'){deliver(m);return;}
+   hostEngine.message(1,m);
+ }else deliver(m);
+}
+function onChannel(dc){
+ dataChannel=dc;
+ dc.onopen=()=>{
+   p2pConnected=true;
+   ws={readyState:1,send:s=>send(JSON.parse(s))};
+   $('signalPanel').style.display='none';
+   if(hostMode){
+     hostEngine=createHostGame((i,msg)=>{if(i===0)deliver(msg);else if(dc.readyState==='open')dc.send(JSON.stringify(msg));},$('name').value,sessionCode);
+     deliver({type:'joined',seat:0,room:sessionCode});
+   }else{
+     deliver({type:'joined',seat:1,room:sessionCode});
+     dc.send(JSON.stringify({type:'hello',name:$('name').value}));
+   }
+ };
+ dc.onmessage=e=>{try{receiveFromPeer(JSON.parse(e.data));}catch(err){console.error('P2P受信エラー',err);}};
+ dc.onclose=()=>connectionLost('P2P接続が切れました。ページを開き直してください');
+ dc.onerror=()=>status('P2Pデータ通信エラー');
+}
+function connectionLost(reason){if(!p2pConnected)return;p2pConnected=false;ws=null;stopVoice(true);connectionEnded=true;status(reason);$('mainAction').disabled=true;$('riichi').disabled=true;}
+function b64encode(obj){const bytes=new TextEncoder().encode(JSON.stringify(obj));let s='';bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s);}
+function b64decode(s){const raw=atob(s.trim().replace(/\s/g,''));return JSON.parse(new TextDecoder().decode(Uint8Array.from(raw,c=>c.charCodeAt(0))));}
+async function iceComplete(pc){if(pc.iceGatheringState==='complete')return;await new Promise((resolve,reject)=>{const timeout=setTimeout(()=>{pc.removeEventListener('icegatheringstatechange',check);reject(Error('ICE情報取得が時間切れです'));},12000);function check(){if(pc.iceGatheringState==='complete'){clearTimeout(timeout);pc.removeEventListener('icegatheringstatechange',check);resolve();}}pc.addEventListener('icegatheringstatechange',check);check();});}
+function showSignal(title,hint){$('signalPanel').style.display='block';$('signalTitle').textContent=title;$('signalHint').textContent=hint;}
+function preparePeer(){if(peer)peer.close();peer=new RTCPeerConnection(rtcConfig);peer.onconnectionstatechange=()=>{if(peer.connectionState==='failed')status('P2P接続できません。別回線の場合はTURN中継が必要なことがあります。');};return peer;}
+async function connect(kind){
+ try{
+  $('create').disabled=$('join').disabled=true;
+  $('signalOut').value='';$('signalIn').value='';
+  hostMode=kind==='create';
+  const pc=preparePeer();
+  if(hostMode){
+   sessionCode=String(Math.floor(100000+Math.random()*900000));
+   onChannel(pc.createDataChannel('hachihai',{ordered:true}));
+   status('接続用コードを作成しています…');
+   await pc.setLocalDescription(await pc.createOffer());await iceComplete(pc);
+   $('signalOut').value=b64encode({v:1,room:sessionCode,description:pc.localDescription});
+   signalStage='host-wait-answer';
+   showSignal('接続コードを相手へ送信','① このコードを相手に送ってください。② 相手から返ってきた返答コードを下の欄へ貼り付けて「読み込む」を押してください。');
+   status('部屋 '+sessionCode+' の接続コードを相手へ送ってください');
+  }else{
+   signalStage='guest-wait-offer';
+   const given=$('code').value.trim();
+   if(given&&!/^\d{6}$/.test(given))throw Error('部屋番号は6桁で入力してください');
+   showSignal('相手の接続コードを入力','① 部屋を作った人から接続コードを受け取り、下に貼って「読み込む」を押してください。② 表示された返答コードを相手へ送り返してください。');
+   status('相手の接続コードを待っています');
+  }
+ }catch(e){status('準備失敗：'+e.message);$('create').disabled=$('join').disabled=false;}
+}
+$('copySignal').onclick=async()=>{try{await navigator.clipboard.writeText($('signalOut').value);status('接続コードをコピーしました');}catch(e){$('signalOut').select();status('コピーできない場合はテキストを手動でコピーしてください');}};
+$('applySignal').onclick=async()=>{
+ try{
+  const blob=b64decode($('signalIn').value);
+  if(blob.v!==1||!blob.description)throw Error('対応していない接続コードです');
+  if(signalStage==='guest-wait-offer'){
+   if(blob.description.type!=='offer')throw Error('部屋作成側のコードではありません');
+   if($('code').value.trim()&&$('code').value.trim()!==blob.room)throw Error('部屋番号が違います');
+   sessionCode=blob.room;
+   peer.ondatachannel=e=>onChannel(e.channel);
+   await peer.setRemoteDescription(blob.description);
+   await peer.setLocalDescription(await peer.createAnswer());await iceComplete(peer);
+   $('signalOut').value=b64encode({v:1,room:sessionCode,description:peer.localDescription});
+   signalStage='guest-answer-generated';
+   showSignal('返答コードを相手へ送信','上の返答コードを部屋作成者に送ってください。相手が読み込むと対局が始まります。');
+   status('返答コードを相手へ送ってください');
+  }else if(signalStage==='host-wait-answer'){
+   if(blob.description.type!=='answer'||blob.room!==sessionCode)throw Error('返答コードまたは部屋番号が違います');
+   await peer.setRemoteDescription(blob.description);
+   signalStage='done';status('相手との直接接続を待っています…');
+  }else throw Error('この操作は現在必要ありません');
+ }catch(e){status('接続コードのエラー：'+e.message);}
+};
+// ゲームはWebRTC DataChannel。音声も別WebRTC接続で行い、仲介メッセージはDataChannel経由。
+let voicePeer=null,voiceStream=null,voiceMakingOffer=false,voiceIgnoreOffer=false,
+    voiceSettingRemoteAnswer=false,voicePendingIce=[],remoteMicOn=false;
+const voiceAudio=$('voiceRemote');voiceAudio.volume=.8;
+// パネルの開閉は表示だけを変える。WebRTC接続やマイクのトラックは停止しない。
+function showVoicePanel(show){
+ $('voicePanel').classList.toggle('hidden',!show);
+ $('voiceToggle').classList.toggle('visible',!show);
+ $('voiceToggle').setAttribute('aria-expanded',String(show));
+}
+$('voiceClose').onclick=()=>showVoicePanel(false);
+$('voiceToggle').onclick=()=>showVoicePanel(true);
+const voiceConfig={iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
+function voiceStatus(v){$('voiceStatus').textContent=v}
+function refreshVoiceStatus(){
+ const voiceActive=!!voiceStream && voiceStream.getAudioTracks().some(t=>t.readyState==='live' && t.enabled);
+ $('voiceToggle').textContent=voiceActive?'🎙 ボイスON':'🎙 ボイスOFF';
+ $('voiceToggle').setAttribute('aria-label',voiceActive?'ボイスON：音声設定を開く':'ボイスOFF：音声設定を開く');
+ $('voiceStart').disabled=!!voiceStream||!S||S.stage==='waiting';
+ $('voiceStop').disabled=!voiceStream;
+ if(voiceStream)voiceStatus('マイクON'+(voicePeer?.connectionState==='connected'?'・接続中':'・接続待ち'));
+ else voiceStatus(remoteMicOn?'相手のマイクON・自分はOFF':'通話OFF');
+}
+function ensureVoicePeer(){
+ if(voicePeer)return voicePeer;
+ const pc=new RTCPeerConnection(voiceConfig);voicePeer=pc;
+ pc.onicecandidate=e=>{if(e.candidate)send({type:'voice_signal',data:{candidate:e.candidate.toJSON()}})};
+ pc.ontrack=e=>{voiceAudio.srcObject=e.streams[0]||new MediaStream([e.track]);voiceAudio.play().catch(()=>voiceStatus('音声再生ボタンを押してください'));};
+ pc.onconnectionstatechange=()=>{
+  if(voicePeer!==pc)return;
+  if(['failed','closed'].includes(pc.connectionState))voiceStatus('音声接続不可・再試行してください');
+  else refreshVoiceStatus();
+ };
+ pc.onnegotiationneeded=async()=>{
+  try{voiceMakingOffer=true;await pc.setLocalDescription();send({type:'voice_signal',data:{description:pc.localDescription.toJSON()}})}
+  catch(e){voiceStatus('音声接続の準備に失敗しました')}
+  finally{voiceMakingOffer=false}
+ };
+ return pc;
+}
+async function receiveVoiceSignal(m){
+ if(!S||S.stage==='waiting'||!m.data)return;
+ const pc=ensureVoicePeer();const d=m.data;
+ try{
+  if(d.description){
+   const offerCollision=d.description.type==='offer'&&(voiceMakingOffer||pc.signalingState!=='stable');
+   const polite=seat===1;
+   voiceIgnoreOffer=!polite&&offerCollision;
+   if(voiceIgnoreOffer)return;
+   voiceSettingRemoteAnswer=d.description.type==='answer';
+   await pc.setRemoteDescription(d.description);
+   voiceSettingRemoteAnswer=false;
+   for(const c of voicePendingIce.splice(0))await pc.addIceCandidate(c);
+   if(d.description.type==='offer'){
+    await pc.setLocalDescription();send({type:'voice_signal',data:{description:pc.localDescription.toJSON()}});
+   }
+  }else if(d.candidate){
+   if(!pc.remoteDescription){voicePendingIce.push(d.candidate);return;}
+   try{await pc.addIceCandidate(d.candidate)}catch(e){if(!voiceIgnoreOffer)throw e}
+  }
+ }catch(e){console.warn('音声接続エラー',e);voiceStatus('音声の接続に失敗しました')}
+}
+async function startVoice(){
+ if(voiceStream)return;
+ if(!navigator.mediaDevices?.getUserMedia){voiceStatus('このブラウザはマイク非対応です');return}
+ if(!S||S.stage==='waiting'){voiceStatus('2人が入室してから開始してください');return}
+ $('voiceStart').disabled=true;voiceStatus('マイクの許可を確認中…');
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});
+  if(!ws||ws.readyState!==WebSocket.OPEN){stream.getTracks().forEach(t=>t.stop());voiceStatus('通信が切断されています');return}
+  voiceStream=stream;
+  const pc=ensureVoicePeer();for(const track of stream.getAudioTracks())pc.addTrack(track,stream);
+  send({type:'voice_state',enabled:true});refreshVoiceStatus();
+ }catch(e){voiceStatus(e.name==='NotAllowedError'?'マイクの使用が許可されていません':'マイクが利用できません');}
+ finally{refreshVoiceStatus()}
+}
+function stopVoice(disconnected=false){
+ if(voiceStream){voiceStream.getTracks().forEach(t=>t.stop());voiceStream=null;}
+ if(voicePeer){voicePeer.onnegotiationneeded=null;voicePeer.close();voicePeer=null;}
+ voiceAudio.pause();voiceAudio.srcObject=null;voicePendingIce=[];voiceMakingOffer=false;voiceIgnoreOffer=false;
+ if(!disconnected&&ws?.readyState===WebSocket.OPEN)send({type:'voice_state',enabled:false});
+ refreshVoiceStatus();
+}
+$('voiceStart').onclick=()=>void startVoice();
+$('voiceStop').onclick=()=>stopVoice();
+$('voicePlay').onclick=()=>voiceAudio.play().then(()=>voiceStatus('音声再生OK')).catch(()=>voiceStatus('相手の音声を待っています'));
+$('voiceVolume').oninput=e=>{voiceAudio.volume=Number(e.target.value)/100;$('voiceVolumeText').textContent=e.target.value+'%'};
+window.addEventListener('pagehide',()=>stopVoice(true));
+
+function playStateSounds(prev,next){
+ if(!prev||seat<0)return;
+ if(prev.room!==next.room||prev.round!==next.round)return;
+ if(next.rivers&&prev.rivers){
+  const my=seat,other=1-seat;
+  for(const p of [my,other])if((next.rivers[p]?.length||0)>(prev.rivers[p]?.length||0))HachiSound.play('discard');
+ }
+ if(next.riichi&&prev.riichi){for(const p of [seat,1-seat])if(next.riichi[p]&&!prev.riichi[p])HachiSound.play('riichi');}
+ if(next.stage==='playing'&&prev.stage==='playing'&&next.hand?.length===8&&prev.hand?.length===7&&next.turn===seat)HachiSound.play('draw');
+ if(next.stage==='ended'&&prev.stage!=='ended'&&next.finish){
+   const f=next.finish;
+   if(f.winner!==null&&f.winner!==undefined){HachiSound.play(f.kind==='ロン'||f.kind==='ron'?'ron':'tsumo');setTimeout(()=>HachiSound.play(f.winner===seat?'result':'loss'),1100);}
+ }
+}
+// requestFullscreen must run immediately in a real tap/click; waiting for WebSocket loses user activation.
+const fullscreenButton=$('onlineFullscreen');
+function updateFullscreenControl(){
+  fullscreenButton.textContent=document.fullscreenElement?'⛶ 全画面閉':'⛶ 全画面';
+}
+function requestGameFullscreen(){
+  if(document.fullscreenElement || !document.documentElement.requestFullscreen)return;
+  try{
+    const outcome=document.documentElement.requestFullscreen({navigationUI:'hide'});
+    if(outcome&&typeof outcome.catch==='function')outcome.catch(()=>{
+      status('全画面化が制限されています。ブラウザの全画面表示か、ホーム画面から起動してください。');
+    });
+  }catch(e){status('このブラウザでは全画面化できません。');}
+}
+fullscreenButton.onclick=()=>{
+  if(document.fullscreenElement){document.exitFullscreen?.().catch?.(()=>{});return;}
+  requestGameFullscreen();
+};
+document.addEventListener('fullscreenchange',updateFullscreenControl);
+$('create').onclick=()=>{requestGameFullscreen();connect('create');};
+$('join').onclick=()=>{requestGameFullscreen();connect('join');};function tile(t,small=false){let b=document.createElement('button');b.type='button';b.className='tile'+(small?' small':'');b.setAttribute('aria-label',names[t[0]]+t.slice(1));const im=document.createElement('img');im.src='https://raw.githubusercontent.com/FluffyStuff/riichi-mahjong-tiles/master/Export/Regular/'+(t[0]==='p'?'Pin':'Man')+t.slice(1)+'.png';im.alt=names[t[0]]+t.slice(1);im.onerror=()=>{im.remove();b.textContent=glyph[t[0]][Number(t.slice(1))-1];};b.append(im);return b;}
+function render(){if(!S)return;const o=1-seat;const mine=S.turn===seat,playing=S.stage==='playing';$('otherName').textContent=S.names[o]||'対戦相手';$('selfName').textContent=S.names[seat]||'あなた';$('otherPts').textContent=S.points[o];$('selfPts').textContent=S.points[seat];$('round').textContent='第'+S.round+'局';$('deck').textContent=S.deckRemaining;$('roomCode').textContent=S.room;const backs=$('backs');backs.replaceChildren();for(let i=0;i<S.opponentCount;i++){let b=document.createElement('div');b.className='tile back';b.textContent='◆';backs.append(b);}for(const [id,idx] of [['selfRiver',seat],['otherRiver',o]]){const river=$(id);river.replaceChildren();S.rivers[idx].forEach((t,i)=>{const b=tile(t,true);b.disabled=true;if(S.riichiMarks[idx]===i)b.classList.add('mark');if(S.discard&&S.discard.by===idx&&i===S.rivers[idx].length-1&&S.phase==='ron'&&S.turn===seat)b.classList.add('glow');river.append(b);});}for(const [id,idx] of [['selfStick',seat],['otherStick',o]])$(id).innerHTML=S.riichi[idx]?'<span class="stick" title="リーチ中"></span>':'';const hand=$('handArea');hand.replaceChildren();S.hand.forEach((t,i)=>{const b=tile(t);if(selected===i)b.classList.add('pick');b.disabled=!(playing&&mine&&S.phase==='discard');b.onclick=()=>{if(b.disabled)return;const now=performance.now();if(selected===i&&lastTap.i===i&&now-lastTap.t<430){send({type:'action',action:'discard',index:i});selected=-1;}else{selected=i;lastTap={i,t:now};}render();};hand.append(b);});if(S.hand.length===7){const b=document.createElement('button');b.className='tile slot';b.title='1枚引く';b.disabled=!(playing&&mine&&S.phase==='draw');b.onclick=()=>send({type:'action',action:'draw'});hand.append(b);}let text=S.stage==='waiting'?'相手が入室するのを待っています':S.stage==='ended'?'この局は終了しました':!mine?'相手の番です':S.phase==='ron'?'ロンできます！':S.phase==='draw'?'1枚引いてください':'捨てる牌を選んでください';const furiten=playing&&S.furiten===true;const notice=$('turnMessage');notice.classList.toggle('furiten-active',furiten);notice.textContent=furiten?'フリテン中：ロン不可・ツモ可能':text;notice.title=furiten?'アガリ待ちの牌が自分の捨て牌にあるため、ロンできません。ツモアガリは可能です。':'';status(S.stage==='waiting'?'部屋番号を相手に教えてください：'+S.room:!connectionEnded?'通信中 · '+text:'通信切断');$('mainAction').textContent=!playing?'待機中':!mine?'相手の操作待ち':S.phase==='discard'?'選択した牌を捨てる':S.phase==='ron'?'ロン！':'1枚引く';$('mainAction').disabled=!(playing&&mine&&(S.phase==='draw'||S.phase==='ron'||(S.phase==='discard'&&selected>=0)));$('riichi').disabled=!(playing&&mine&&(S.phase==='draw'||S.phase==='discard')&&!S.riichi[seat]);$('riichi').textContent=S.riichi[seat]?'リーチ中':'リーチ −1点';if(S.phase==='ron'&&mine)showRon();else if(S.stage==='ended')showEnd();else{hideDlg();endShown=false;}}
+$('mainAction').onclick=()=>{if(!S||S.stage!=='playing'||S.turn!==seat)return;const a=S.phase==='ron'?'ron':S.phase==='discard'?'discard':'draw';send({type:'action',action:a,index:selected});selected=-1;};$('riichi').onclick=()=>send({type:'action',action:'riichi',index:selected});
+function showDlg(title,html,primary,fn,secondary,fn2){$('dlgTitle').textContent=title;$('dlgText').innerHTML=html;$('dlgAction').textContent=primary;$('dlgAction').onclick=fn;$('dlgSkip').style.display=secondary?'block':'none';if(secondary){$('dlgSkip').textContent=secondary;$('dlgSkip').onclick=fn2;}$('overlay').classList.add('show');}
+function hideDlg(){$('overlay').classList.remove('show');}
+let ronPreviewTimer=null;
+function showRon(){
+  if($('overlay').classList.contains('show')||ronPreviewTimer!==null)return;
+  // タイマー中に次の局に移った場合にも古い確認画面を出さない
+  const previewTile=S?.discard?.tile;
+  ronPreviewTimer=setTimeout(()=>{
+    ronPreviewTimer=null;
+    if(!(S?.stage==='playing'&&S.phase==='ron'&&S.turn===seat&&S.discard?.tile===previewTile))return;
+    const handTiles=Array.isArray(S.hand)?S.hand.slice(0,7):[];
+    const discardTile=S.discard?.tile;
+    if(handTiles.length!==7||!discardTile)return;
+    showDlg('ロンのチャンス！','相手が捨てた牌でアガれます。下の8枚を確認してください。','ロン！',()=>send({type:'action',action:'ron'}),'見送る',()=>send({type:'action',action:'pass'}));
+    const zone=$('winTiles');zone.replaceChildren();
+    const preview=document.createElement('div');preview.className='ron-preview';
+    const label=document.createElement('div');label.className='caption';label.textContent='あなたの手牌＋相手の捨て牌';preview.append(label);
+    const row=document.createElement('div');row.className='ron-preview-row';
+    handTiles.forEach(t=>{const el=tile(t);el.disabled=true;row.append(el)});
+    const winning=tile(discardTile);winning.disabled=true;winning.classList.add('ron-winning');winning.title='相手が捨てたアガリ牌';row.append(winning);
+    preview.append(row);
+    const legend=document.createElement('div');legend.className='ron-legend';legend.innerHTML='<span>左の7枚：あなたの手牌</span><strong>右端：アガリ牌</strong>';
+    preview.append(legend);zone.append(preview);
+  },1300);
+}
+function showEnd(){if(endShown)return;endShown=true;const f=S.finish,me=f.winner===seat;const title=f.winner===null?'流局':me?'あなたの'+f.kind+'！':'相手の'+f.kind+'！';let html=f.winner===null?'山がなくなりました。':`<p>${me?'おめでとうございます！':'相手がアガりました。'} ${f.earned}点獲得</p><p>基本 ${f.base}点${f.riichi ? `　リーチ ${f.riichi}点` : ""}${f.ippatsu > 0 ? `　リーチ一発 ${f.ippatsu}点` : ""}${f.double > 0 ? `　ダブルリーチ ${f.double}点` : ""}${f.opponentRiichiBonus ? `　相手のリーチ棒 +${f.opponentRiichiBonus}点` : ""}</p><p>${f.bonuses.map(r=>r.name+' ＋'+r.pt+'点').join(' / ')||'役なし'}</p>`;showDlg(title,html,f.matchOver?'再戦する（両者同意）':'次の局へ（両者同意）',()=>{send({type:f.matchOver?'rematch':'next'});hideDlg();});const zone=$('winTiles');zone.replaceChildren();if(f.hand?.length){f.groups.forEach(g=>{const wrap=document.createElement('div');wrap.style.cssText='display:flex;gap:2px;margin:3px';g.forEach(t=>{const b=tile(t,true);b.disabled=true;if(t===f.winTile)b.classList.add('last');wrap.append(b);});zone.append(wrap);});}}
+</script></body></html>
